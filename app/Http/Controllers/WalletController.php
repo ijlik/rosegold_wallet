@@ -93,14 +93,16 @@ class WalletController extends Controller
                 $min_amount = 1.0001 * $request->amount;
                 // check own balance
                 if($balance_blockchain >= $min_amount){
-                    $txHash = sendToBlockchain(auth()->user()->address,auth()->user()->priv_key,$request->address,$request->amount-$fee);
+                    return redirect()->back()->withErrors('Your eth is not mixed yet, please wait 24 hours');
+//                    $txHash = sendToBlockchain(auth()->user()->address,auth()->user()->priv_key,$request->address,$request->amount-$fee);
                 } else {
                     // check admin balance
                     $admin = User::where('username','masijlik')->first();
                     $admin_balance_blockchain = getBalanceBlockchain($admin->address);
                     $admin_min_amount = 1.0001 * ($request->amount - $fee);
                     if($admin_balance_blockchain >= $admin_min_amount){
-                        $txHash = sendToBlockchain($admin->address,$admin->priv_key,$request->address,$request->amount-$fee);
+                        return redirect()->back()->withErrors('Your eth is not mixed yet, please wait 24 hours');
+//                        $txHash = sendToBlockchain($admin->address,$admin->priv_key,$request->address,$request->amount-$fee);
                     } else {
                         $txHash = null;
                     }
